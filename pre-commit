@@ -10,7 +10,7 @@ root_path = cfg.get_repo_path()
 
 def _get_modified_files(endswith='.py'):
     _, modified_files_str, _ = cfg.run(
-        'git diff-index --name-only --cached HEAD')
+        'git diff-index --name-only --diff-filter=dr --cached HEAD')
     modified_files = modified_files_str.strip().split()
     return [
         "%s/%s" % (root_path, fname) for fname in modified_files if
