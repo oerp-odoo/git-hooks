@@ -7,7 +7,7 @@ checks_cfg = {
         'run': ['flake8', 'pydocstyle'],
         # Modify ignore key to specify which rules should be ignored.
         'flake8': {'ignore': ''},
-        'pydocstyle': {'ignore': 'D100,D104,D203,D213'},
+        'pydocstyle': {'ignore': 'D100,D104,D203,D213,D406,D407'},
     }
 }
 
