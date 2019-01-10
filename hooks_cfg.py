@@ -8,6 +8,11 @@ checks_cfg = {
         # Modify ignore key to specify which rules should be ignored.
         'flake8': {'ignore': ''},
         'pydocstyle': {'ignore': 'D100,D104,D203,D213,D406,D407'},
+    },
+    'prepare-commit-message': {
+        # Branches that will be ignored and won't trigger
+        # prepare-commit-message to update message.
+        'exclude_branches': ['master', '10.0', '11.0', '12.0', '13.0']
     }
 }
 

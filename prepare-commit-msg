@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+
+import hooks_cfg as cfg
+
+pcm_cfg = cfg.checks_cfg['prepare-commit-message']
+
+
+def get_branchname():
+    """Get current branch name."""
+    branchname = subprocess.check_output(
+        ['/usr/bin/git', 'symbolic-ref', '--short', 'HEAD'])
+    # Convert to string.
+    branchname = branchname.decode('utf-8')
+    return branchname.strip()
+
+
+def prepend_commit_msg(text, prefix='', suffix=''):
+    """Prepend commit message with text."""
+    with open(sys.argv[1], 'r+') as f:
+        msg = f.read()
+        # Prepend only if message is empty or message does not contain
+        # same text already and start of message is either new line or
+        # comment.
+        if not msg or (text not in msg and msg[0] in ('\n', '#')):
+            # Point to start of file.
+            f.seek(0)
+            f.write(prefix+text+suffix+msg)
+            # Truncate to overwrite file.
+            f.truncate()
+
+
+# We prefix with two empty lines to have commit message look like this
+# (when initially message is empty):
+
+#
+#
+# [BRANCH] BRANCH_NAME
+
+# Check if branch should be excluded to not update its commit message.
+branchname = get_branchname()
+if branchname not in pcm_cfg['exclude_branches']:
+    prepend_commit_msg('[BRANCH] %s' % branchname, prefix='\n\n')
