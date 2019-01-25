@@ -9,8 +9,19 @@ pcm_cfg = cfg.checks_cfg['prepare-commit-message']
 
 def get_branchname():
     """Get current branch name."""
-    branchname = subprocess.check_output(
-        ['/usr/bin/git', 'symbolic-ref', '--short', 'HEAD'])
+    # print('before')
+    try:
+        branchname = subprocess.check_output(
+            # -q suppress error message for non-symbolic (detached) ref.
+            ['/usr/bin/git', 'symbolic-ref', '-q', '--short', 'HEAD'])
+    except subprocess.CalledProcessError as e:
+        # When `fatal: ref HEAD is not a symbolic ref`. It would return
+        # code 128 indicating this, but because we are using `-q`
+        # it does return generic error code 1.
+        if e.returncode == 1:
+            return False
+        else:
+            raise
     # Convert to string.
     branchname = branchname.decode('utf-8')
     return branchname.strip()
@@ -40,5 +51,5 @@ def prepend_commit_msg(text, prefix='', suffix=''):
 
 # Check if branch should be excluded to not update its commit message.
 branchname = get_branchname()
-if branchname not in pcm_cfg['exclude_branches']:
+if branchname and branchname not in pcm_cfg['exclude_branches']:
     prepend_commit_msg('[BRANCH] %s' % branchname, prefix='\n\n')
