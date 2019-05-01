@@ -1,13 +1,19 @@
+#!/usr/bin/env python3
 import os
 from subprocess import Popen, PIPE
+
+# Prefix to run python3 module.
+python3_prefix = 'python3 -m %s'
 
 checks_cfg = {
     'pre-commit': {
         # Modify run key to specify which checks should be run.
         'run': ['flake8', 'pydocstyle'],
         # Modify ignore key to specify which rules should be ignored.
-        'flake8': {'ignore': ''},
-        'pydocstyle': {'ignore': 'D100,D104,D203,D213,D406,D407'},
+        'flake8': {'ignore': '', 'cmd_prefix': python3_prefix},
+        'pydocstyle': {
+            'ignore': 'D100,D104,D203,D213,D406,D407',
+            'cmd_prefix': python3_prefix},
     },
     'prepare-commit-message': {
         # Branches that will be ignored and won't trigger

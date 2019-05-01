@@ -45,6 +45,12 @@ def _get_check_arg_str(check_command, modified_files_str):
     return modified_files_str
 
 
+def _add_cmd_prefix(check_command):
+    if pre_commit_cfg[check_command].get('cmd_prefix'):
+        return pre_commit_cfg[check_command]['cmd_prefix'] % check_command
+    return check_command
+
+
 def get_command_items(*checks):
     """Generate command items to run checks.
 
@@ -61,8 +67,9 @@ def get_command_items(*checks):
     # Only run checks if there was anything modified.
     if modified_files_str:
         for check in checks:
-            command_items.append(
-                (check, _get_check_arg_str(check, modified_files_str)))
+            arg_str = _get_check_arg_str(check, modified_files_str)
+            check = _add_cmd_prefix(check)
+            command_items.append((check, arg_str))
     return command_items
 
 
