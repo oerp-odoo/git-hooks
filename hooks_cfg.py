@@ -18,7 +18,9 @@ checks_cfg = {
     'prepare-commit-message': {
         # Branches that will be ignored and won't trigger
         # prepare-commit-message to update message.
-        'exclude_branches': ['master', '10.0', '11.0', '12.0', '13.0', '14.0']
+        'exclude_branches': [
+            'master', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0'
+        ]
     }
 }
 
